@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Speech Emotion Recognition</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>🎤 Speech Emotion Recognition</h1>
+
+        <p>
+            Upload a speech recording or record your voice to detect the emotion.
+        </p>
+
+        <form action="/predict" method="POST" enctype="multipart/form-data">
+
+        <input
+            type="file"
+            name="audio"
+            accept=".wav"
+            required>
+
+        <br><br>
+
+        <button type="submit">
+            Upload & Predict
+        </button>
+
+        </form>
+
+        <button>Record Voice</button>
+
+    </div>
+
+</body>
+
+</html>
