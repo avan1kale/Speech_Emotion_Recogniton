@@ -5,17 +5,18 @@ import numpy as np
 import tensorflow as tf
 import pickle
 import subprocess
+from datetime import datetime
+from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
+
+model = tf.keras.models.load_model("emotion_model.keras")
+with open("label_encoder.pkl", "rb") as f:
+    encoder = pickle.load(f)
 
 UPLOAD_FOLDER = "uploads"
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
-
-model = tf.keras.models.load_model("emotion_model.keras")
-
-with open("label_encoder.pkl", "rb") as f:
-    encoder = pickle.load(f)
 
 #function to extract features from audio file
 def extract_features(audio_path):
@@ -86,17 +87,39 @@ def predict():
 
 @app.route("/record", methods=["POST"])
 def record():
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     audio = request.files["audio"]
 
-    filepath = os.path.join(
-        app.config["UPLOAD_FOLDER"],
-        audio.filename
+    webm_path = os.path.join(
+    app.config["UPLOAD_FOLDER"],
+    f"{timestamp}.webm"
     )
 
-    audio.save(filepath)
+    wav_path = os.path.join(
+    app.config["UPLOAD_FOLDER"],
+    f"{timestamp}.wav"
+    )
 
-    return "Audio received successfully!"
+    audio.save(webm_path)
+
+    subprocess.run([
+        "ffmpeg",
+        "-y",
+        "-i", webm_path,
+        wav_path
+    ])
+
+    features2 = extract_features(wav_path)
+    prediction2 = model.predict(features2)
+    predicted_class2 = np.argmax(prediction2)
+    emotion2 = encoder.inverse_transform([predicted_class2])[0]
+    confidence2 = float(np.max(prediction2) * 100)
+
+    return jsonify({
+    "emotion": emotion2,
+    "confidence": round(confidence2, 2)
+    })
 
 if __name__ == "__main__":
     app.run(debug=True)

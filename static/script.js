@@ -1,69 +1,93 @@
 const recordBtn = document.getElementById("recordBtn");
-const stopBtn = document.getElementById("stopBtn");
 const status = document.getElementById("status");
+const emotion = document.getElementById("emotion");
+const confidence = document.getElementById("confidence");
 
 let mediaRecorder;
-
 let audioChunks = [];
+let isRecording = false;
 
 recordBtn.addEventListener("click", async () => {
 
-    try {
+    // START RECORDING
+    if (!isRecording) {
 
-        const stream = await navigator.mediaDevices.getUserMedia({
-            audio: true
-        });
+        try {
 
-        status.innerHTML = "🎙️ Recording...";
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: true
+            });
 
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
+            mediaRecorder = new MediaRecorder(stream);
 
-        mediaRecorder.ondataavailable = (event) => {
-            console.log(event.data);
-            audioChunks.push(event.data);
-        };
+            audioChunks = [];
 
-        mediaRecorder.start();
+            mediaRecorder.ondataavailable = (event) => {
+                audioChunks.push(event.data);
+            };
 
-        console.log("Recorder created!");
-        console.log("State:", mediaRecorder.state);
+            mediaRecorder.onstop = () => {
 
-        status.innerHTML = "🎙️ Recording...";
+                const audioBlob = new Blob(audioChunks, {
+                    type: "audio/webm"
+                });
+
+                const formData = new FormData();
+
+                formData.append(
+                    "audio",
+                    audioBlob,
+                    "recording.webm"
+                );
+
+                status.innerHTML = "⏳ Processing...";
+
+                fetch("/record", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+
+                    emotion.innerHTML = data.emotion;
+                    confidence.innerHTML = data.confidence + "%";
+
+                    status.innerHTML = "✅ Prediction Complete";
+
+                    recordBtn.innerHTML = "🎙️ Start Recording";
+
+                    isRecording = false;
+                });
+
+            };
+
+            mediaRecorder.start();
+
+            isRecording = true;
+
+            recordBtn.innerHTML = "⏹️ Stop Recording";
+
+            status.innerHTML = "🎙️ Recording...";
+
+        }
+
+        catch (error) {
+
+            status.innerHTML = "❌ Microphone access denied.";
+
+            console.log(error);
+
+        }
 
     }
 
-    catch(error) {
+    // STOP RECORDING
+    else {
 
-        status.innerHTML = "❌ Microphone access denied.";
+        mediaRecorder.stop();
 
-        console.log(error);
+        status.innerHTML = "⏹️ Recording stopped.";
 
-    }
-
-});
-stopBtn.addEventListener("click", () => {
-
-    mediaRecorder.stop();
-
-    status.innerHTML = "⏹️ Recording stopped.";
-
-    mediaRecorder.onstop = () => {
-
-        const audioBlob = new Blob(audioChunks, {
-            type: "audio/webm"
-        });
-
-        const formData = new FormData();
-
-        formData.append("audio",audioBlob,"recording.webm");
-
-        fetch("/record", {method: "POST",body: formData})
-        .then(response => response.text())
-        .then(data => {
-        console.log(data);
-
-    });
     }
 
 });
