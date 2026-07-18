@@ -4,6 +4,7 @@ import librosa
 import numpy as np
 import tensorflow as tf
 import pickle
+import subprocess
 
 app = Flask(__name__)
 
@@ -83,6 +84,19 @@ def predict():
     <a href="/">Predict Another</a>
     """
 
+@app.route("/record", methods=["POST"])
+def record():
+
+    audio = request.files["audio"]
+
+    filepath = os.path.join(
+        app.config["UPLOAD_FOLDER"],
+        audio.filename
+    )
+
+    audio.save(filepath)
+
+    return "Audio received successfully!"
 
 if __name__ == "__main__":
     app.run(debug=True)

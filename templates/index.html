@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Speech Emotion Recognition</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
 
-    <div class="container">
+    <h1>Speech Emotion Recognition</h1>
 
-        <h1>🎤 Speech Emotion Recognition</h1>
+    <p>Upload an audio file or record your voice to detect emotion.</p>
 
-        <p>
-            Upload a speech recording or record your voice to detect the emotion.
-        </p>
-
-        <form action="/predict" method="POST" enctype="multipart/form-data">
+    <!-- Upload Form -->
+    <form action="/predict" method="POST" enctype="multipart/form-data">
 
         <input
             type="file"
@@ -25,18 +22,26 @@
             accept=".wav"
             required>
 
-        <br><br>
-
         <button type="submit">
             Upload & Predict
         </button>
 
-        </form>
+    </form>
 
-        <button>Record Voice</button>
+    <hr>
 
-    </div>
+    <h3>Or Record Live</h3>
+
+    <button id="recordBtn">
+        🎙️ Start Recording
+    </button>
+    <button id="stopBtn">
+    ⏹️ Stop Recording
+    </button>
+
+    <p id="status"></p>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
-
 </html>
