@@ -42,17 +42,37 @@ recordBtn.addEventListener("click", async () => {
 
                 status.innerHTML = "⏳ Processing...";
 
+                console.log("Sending request to /record...");
+
                 fetch("/record", {
                     method: "POST",
                     body: formData
                 })
-                .then(response => response.json())
+                .then(response => {
+                     console.log("Status:", response.status);
+                    return response.json();
+                })
                 .then(data => {
+
+                    console.log(data);
+                    console.log("emotion element:", emotion);
+                    console.log("confidence element:", confidence);
+                    console.log("status element:", status);
+                    console.log("recordBtn element:", recordBtn);
 
                     emotion.innerHTML = data.emotion;
                     confidence.innerHTML = data.confidence + "%";
 
                     status.innerHTML = "✅ Prediction Complete";
+
+                    recordBtn.innerHTML = "🎙️ Start Recording";
+
+                    isRecording = false;
+                })
+                .catch(error => {
+                    console.log(error);
+
+                    status.innerHTML = "❌ Error";
 
                     recordBtn.innerHTML = "🎙️ Start Recording";
 

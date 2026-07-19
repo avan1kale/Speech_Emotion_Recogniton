@@ -9,6 +9,7 @@ from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 
 app = Flask(__name__)
+print("THIS IS MY APP.PY")
 
 model = tf.keras.models.load_model("emotion_model.keras")
 with open("label_encoder.pkl", "rb") as f:
@@ -120,6 +121,10 @@ def record():
     "emotion": emotion2,
     "confidence": round(confidence2, 2)
     })
+
+@app.route("/test")
+def test():
+    return "TEST ROUTE WORKS"
 
 if __name__ == "__main__":
     app.run(debug=True)

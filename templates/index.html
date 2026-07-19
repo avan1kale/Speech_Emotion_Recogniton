@@ -1,57 +1,292 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Speech Emotion Recognition</title>
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EchoSense — Speech Emotion Recognition</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <h1>Speech Emotion Recognition</h1>
+  <div class="page">
 
-    <p>Upload an audio file or record your voice to detect emotion.</p>
+    <!-- NAV -->
+    <nav class="navbar">
+      <div class="brand">
+        <span class="brand-mark">◐◑</span>
+        <span class="brand-name">EchoSense</span>
+      </div>
+      <ul class="nav-links">
+        <li><a href="#hero">Home</a></li>
+        <li><a href="#record">Record</a></li>
+        <li><a href="#upload">Upload</a></li>
+        <li><a href="#result">Result</a></li>
+      </ul>
+      <div class="nav-meta"><span class="dot"></span> Model Live</div>
+    </nav>
 
-    <!-- Upload Form -->
-    <form action="/predict" method="POST" enctype="multipart/form-data">
+    <!-- HERO -->
+    <section class="hero" id="hero">
+      <div class="hero-copy">
+        <h1 class="hero-title"><span class="light">speech</span><span class="bold">emotion.</span></h1>
+        <p class="hero-desc">
+          Upload an audio file or record your voice — a listening experience
+          that reads the feeling behind every word, instantly.
+        </p>
 
-        <input
-            type="file"
-            name="audio"
-            accept=".wav"
-            required>
+        <div class="hero-tags">
+          <span class="tag">🎧 Voice input</span>
+          <span class="tag">🧠 Deep learning</span>
+          <span class="tag">⚡ Instant result</span>
+        </div>
 
-        <button type="submit">
-            Upload & Predict
+        <div class="hero-stats">
+          <div class="stat-block">
+            <span class="stat-num">8</span>
+            <span class="stat-text">emotion classes the model can recognize</span>
+          </div>
+          <div class="stat-block">
+            <span class="stat-num">2</span>
+            <span class="stat-text">ways in — upload a clip or record it live</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual" id="record">
+        <span class="corner-reticle tl"></span>
+        <button class="icon-pill" id="resetBtn" type="button" title="Reset">↻</button>
+
+        <div class="record-stage">
+          <div class="pulse-ring" id="pulseRing"></div>
+          <div class="wave-bars" id="waveBars">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <button id="recordBtn" class="btn btn-record" type="button">🎙️ Start Recording</button>
+        </div>
+
+        <div class="status-line" id="statusLine"><span id="status">Ready when you are</span></div>
+
+        <span class="floating-chip chip-left">🎙️</span>
+        <span class="floating-chip chip-right">📊</span>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <div class="marquee-band">
+      <div class="marquee-track">
+        <span>analyze&nbsp;·&nbsp;detect&nbsp;·&nbsp;listen&nbsp;·&nbsp;analyze&nbsp;·&nbsp;detect&nbsp;·&nbsp;listen&nbsp;·&nbsp;</span>
+        <span>analyze&nbsp;·&nbsp;detect&nbsp;·&nbsp;listen&nbsp;·&nbsp;analyze&nbsp;·&nbsp;detect&nbsp;·&nbsp;listen&nbsp;·&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- UPLOAD -->
+    <section class="split-section" id="upload">
+      <div class="split-visual">
+        <span class="corner-reticle tl"></span>
+        <span class="corner-reticle tr"></span>
+        <span class="split-bigtext">upload</span>
+        <div class="accent-card"><span class="accent-icon">🎵</span></div>
+      </div>
+
+      <div class="split-copy">
+        <span class="eyebrow">Prefer a file?</span>
+        <h2>Upload an audio clip</h2>
+        <p>Drop in a recording and the model will break it down for you — same model, same accuracy, no microphone needed.</p>
+
+        <label class="file-drop" id="fileDrop" for="audioFile">
+          <input type="file" id="audioFile" name="audio" accept="audio/*" hidden>
+          <span class="file-drop-icon">⬆️</span>
+          <span class="file-drop-text" id="fileName">Choose an audio file</span>
+          <span class="file-drop-hint">or drag &amp; drop it here</span>
+        </label>
+
+        <button id="uploadBtn" class="btn btn-dark" type="button">
+          <span class="btn-label">Upload &amp; Predict</span>
+          <span class="spinner"></span>
         </button>
 
-    </form>
+        <div id="uploadResult" class="upload-result"></div>
+      </div>
+    </section>
 
-    <hr>
+    <!-- RESULT -->
+    <section class="result-band" id="result">
+      <span class="corner-reticle tl light"></span>
+      <span class="corner-reticle tr light"></span>
 
-    <h3>Or Record Live</h3>
+      <div class="result-band-head">
+        <h2>Prediction result</h2>
+        <p>Live output from the model</p>
+      </div>
 
-    <button id="recordBtn">
-        🎙️ Start Recording
-    </button>
-    
-    <p id="status"></p>
+      <div class="result-rows">
+        <div class="result-row">
+          <div class="result-row-left">
+            <span class="result-icon" id="emotionIcon">🤖</span>
+            <div class="result-row-text">
+              <span class="row-label">Emotion</span>
+              <span class="row-value" id="emotion">—</span>
+            </div>
+          </div>
+          <span class="row-pill">Detected</span>
+        </div>
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <hr>
+        <div class="result-row">
+          <div class="result-row-left">
+            <span class="result-icon">📈</span>
+            <div class="result-row-text">
+              <span class="row-label">Confidence</span>
+              <span class="row-value" id="confidence">—</span>
+            </div>
+          </div>
+          <div class="confidence-bar-track">
+            <div class="confidence-bar-fill" id="confidenceFill"></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-<h2>Prediction Result</h2>
+    <footer class="foot">Powered by your TensorFlow emotion model · Flask backend</footer>
+  </div>
 
-<p>
-    Emotion:
-    <span id="emotion">-</span>
-</p>
+  <!-- original recording logic, untouched -->
+  
 
-<p>
-    Confidence:
-    <span id="confidence">-</span>
-</p>
+  <script>
+    // ---------------------------------------------------------
+    // Upload & Predict wiring — same /predict route, rendered
+    // into a result box instead of navigating away.
+    // ---------------------------------------------------------
+    const audioFileInput = document.getElementById("audioFile");
+    const fileNameEl = document.getElementById("fileName");
+    const uploadBtn = document.getElementById("uploadBtn");
+    const uploadResult = document.getElementById("uploadResult");
+    const fileDrop = document.getElementById("fileDrop");
+
+    audioFileInput.addEventListener("change", () => {
+      if (audioFileInput.files.length > 0) {
+        fileNameEl.textContent = audioFileInput.files[0].name;
+        fileDrop.classList.add("has-file");
+      }
+    });
+
+    ["dragover", "dragleave", "drop"].forEach((evt) => {
+      fileDrop.addEventListener(evt, (e) => {
+        e.preventDefault();
+        if (evt === "dragover") fileDrop.classList.add("dragging");
+        if (evt === "dragleave") fileDrop.classList.remove("dragging");
+        if (evt === "drop") {
+          fileDrop.classList.remove("dragging");
+          const dropped = e.dataTransfer.files;
+          if (dropped.length > 0) {
+            audioFileInput.files = dropped;
+            fileNameEl.textContent = dropped[0].name;
+            fileDrop.classList.add("has-file");
+          }
+        }
+      });
+    });
+
+    uploadBtn.addEventListener("click", async () => {
+      if (!audioFileInput.files.length) {
+        uploadResult.innerHTML = `<p class="upload-msg upload-error">⚠️ Please choose an audio file first.</p>`;
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("audio", audioFileInput.files[0]);
+
+      uploadBtn.disabled = true;
+      uploadBtn.classList.add("loading");
+      uploadResult.innerHTML = "";
+
+      try {
+        const response = await fetch("/predict", {
+          method: "POST",
+          body: formData
+        });
+        const html = await response.text();
+        uploadResult.innerHTML = `<div class="upload-msg upload-ok">${html}</div>`;
+      } catch (error) {
+        uploadResult.innerHTML = `<p class="upload-msg upload-error">❌ Something went wrong. Try again.</p>`;
+        console.log(error);
+      } finally {
+        uploadBtn.disabled = false;
+        uploadBtn.classList.remove("loading");
+      }
+    });
+
+    // ---------------------------------------------------------
+    // Visual polish layer — watches the exact same elements
+    // script.js already updates, without changing that file.
+    // ---------------------------------------------------------
+    const recordBtnEl = document.getElementById("recordBtn");
+    const pulseRing = document.getElementById("pulseRing");
+    const waveBars = document.getElementById("waveBars");
+    const statusEl = document.getElementById("status");
+    const emotionEl = document.getElementById("emotion");
+    const confidenceEl = document.getElementById("confidence");
+    const confidenceFill = document.getElementById("confidenceFill");
+    const emotionIcon = document.getElementById("emotionIcon");
+    const resultBand = document.getElementById("result");
+    const resetBtn = document.getElementById("resetBtn");
+
+    const emotionIcons = {
+      happy: "😄", sad: "😢", angry: "😠", fear: "😨", fearful: "😨",
+      disgust: "🤢", surprise: "😲", surprised: "😲", neutral: "😐", calm: "😌"
+    };
+
+    const watch = (el, cb) => {
+      const obs = new MutationObserver(cb);
+      obs.observe(el, { childList: true, characterData: true, subtree: true });
+    };
+
+    watch(recordBtnEl, () => {
+      const recording = recordBtnEl.innerHTML.includes("Stop");
+      pulseRing.classList.toggle("active", recording);
+      waveBars.classList.toggle("active", recording);
+      recordBtnEl.classList.toggle("recording", recording);
+    });
+
+    watch(statusEl, () => {
+      const text = statusEl.innerHTML;
+      statusEl.classList.remove("status-ok", "status-error", "status-busy");
+      if (text.includes("✅")) statusEl.classList.add("status-ok");
+      else if (text.includes("❌")) statusEl.classList.add("status-error");
+      else if (text.includes("⏳") || text.includes("🎙️")) statusEl.classList.add("status-busy");
+    });
+
+    watch(emotionEl, () => {
+      const label = emotionEl.textContent.trim().toLowerCase();
+      emotionIcon.textContent = emotionIcons[label] || "🤖";
+      resultBand.classList.add("has-result");
+    });
+
+    watch(confidenceEl, () => {
+      const value = parseFloat(confidenceEl.textContent);
+      if (!isNaN(value)) {
+        confidenceFill.style.width = value + "%";
+      }
+    });
+
+    // purely cosmetic reset — clears the UI, no backend call
+    resetBtn.addEventListener("click", () => {
+      audioFileInput.value = "";
+      fileNameEl.textContent = "Choose an audio file";
+      fileDrop.classList.remove("has-file");
+      uploadResult.innerHTML = "";
+      emotionEl.textContent = "—";
+      confidenceEl.textContent = "—";
+      confidenceFill.style.width = "0%";
+      emotionIcon.textContent = "🤖";
+      statusEl.textContent = "Ready when you are";
+      statusEl.classList.remove("status-ok", "status-error", "status-busy");
+      resultBand.classList.remove("has-result");
+    });
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 </html>
