@@ -204,11 +204,17 @@
 
       try {
         const response = await fetch("/predict", {
-          method: "POST",
-          body: formData
-        });
-        const html = await response.text();
-        uploadResult.innerHTML = `<div class="upload-msg upload-ok">${html}</div>`;
+        method: "POST",
+        body: formData});
+
+        const data = await response.json();
+
+        emotionEl.textContent = data.emotion;
+        confidenceEl.textContent = data.confidence + "%";
+        confidenceFill.style.width = data.confidence + "%";
+
+        statusEl.textContent = "✅ Prediction Complete";
+        uploadResult.innerHTML = "";
       } catch (error) {
         uploadResult.innerHTML = `<p class="upload-msg upload-error">❌ Something went wrong. Try again.</p>`;
         console.log(error);

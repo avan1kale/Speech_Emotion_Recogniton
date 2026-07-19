@@ -76,15 +76,10 @@ def predict():
 
     confidence = np.max(prediction) * 100
 
-    return f"""
-    <h2>Prediction Result</h2>
-
-    <h3>Emotion : {emotion}</h3>
-
-    <h3>Confidence : {confidence:.2f}%</h3>
-
-    <a href="/">Predict Another</a>
-    """
+    return jsonify({
+    "emotion": emotion,
+    "confidence": round(float(confidence), 2)
+    })
 
 @app.route("/record", methods=["POST"])
 def record():
@@ -111,15 +106,15 @@ def record():
         wav_path
     ])
 
-    features2 = extract_features(wav_path)
-    prediction2 = model.predict(features2)
-    predicted_class2 = np.argmax(prediction2)
-    emotion2 = encoder.inverse_transform([predicted_class2])[0]
-    confidence2 = float(np.max(prediction2) * 100)
+    features = extract_features(wav_path)
+    prediction = model.predict(features)
+    predicted_class = np.argmax(prediction)
+    emotion = encoder.inverse_transform([predicted_class])[0]
+    confidence = float(np.max(prediction) * 100)
 
     return jsonify({
-    "emotion": emotion2,
-    "confidence": round(confidence2, 2)
+    "emotion": emotion,
+    "confidence": round(confidence, 2)
     })
 
 @app.route("/test")

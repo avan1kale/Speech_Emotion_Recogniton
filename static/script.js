@@ -3,6 +3,7 @@ const status = document.getElementById("status");
 const emotion = document.getElementById("emotion");
 const confidence = document.getElementById("confidence");
 
+
 let mediaRecorder;
 let audioChunks = [];
 let isRecording = false;
