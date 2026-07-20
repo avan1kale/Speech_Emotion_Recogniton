@@ -16,6 +16,7 @@ with open("label_encoder.pkl", "rb") as f:
     encoder = pickle.load(f)
 
 UPLOAD_FOLDER = "uploads"
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
