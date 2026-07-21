@@ -1,11 +1,9 @@
-from flask import Flask, render_template, request
 import os
 import librosa
 import numpy as np
 import tensorflow as tf
 import pickle
 import subprocess
-import os
 from datetime import datetime
 from flask import Flask, render_template, request, jsonify
 
