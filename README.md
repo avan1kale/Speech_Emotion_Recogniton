@@ -105,48 +105,51 @@ EchoSense/
 
 ---
 
-# ⚙️ Installation
+# 🤝 Fork & Run the Project
 
-## 1. Clone the repository
+## Step 1
+
+Fork this repository using the **Fork** button on GitHub.
+
+---
+
+## Step 2
+
+Clone your fork.
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/EchoSense.git
+git clone https://github.com/avan1kale/Speech_Emotion_Recogniton
 ```
 
 ---
 
-## 2. Enter the project directory
+## Step 3
 
-```bash
-cd EchoSense
-```
-
----
-
-## 3. Create a virtual environment
-
-### Windows
+Create a virtual environment.
 
 ```bash
 python -m venv venv
 ```
 
-Activate:
+Activate it.
+
+Windows
 
 ```bash
 venv\Scripts\activate
 ```
 
-### Linux / macOS
+Linux/macOS
 
 ```bash
-python3 -m venv venv
 source venv/bin/activate
 ```
 
 ---
 
-## 4. Install dependencies
+## Step 4
+
+Install dependencies.
 
 ```bash
 pip install -r requirements.txt
@@ -154,17 +157,11 @@ pip install -r requirements.txt
 
 ---
 
-## 5. Install FFmpeg
+## Step 5
 
-### Windows
+Install FFmpeg.
 
-Download FFmpeg:
-
-https://ffmpeg.org/download.html
-
-Extract it and add the **bin** folder to your system PATH.
-
-Verify installation:
+Verify:
 
 ```bash
 ffmpeg -version
@@ -172,13 +169,15 @@ ffmpeg -version
 
 ---
 
-## 6. Run the application
+## Step 6
+
+Run the application.
 
 ```bash
 python app.py
 ```
 
-Open
+Visit
 
 ```
 http://127.0.0.1:5000
@@ -262,110 +261,6 @@ Emotion classes:
 
 ---
 
-# 🤝 Fork & Run the Project
-
-## Step 1
-
-Fork this repository using the **Fork** button on GitHub.
-
----
-
-## Step 2
-
-Clone your fork.
-
-```bash
-git clone https://github.com/<your-username>/EchoSense.git
-```
-
----
-
-## Step 3
-
-Move into the project.
-
-```bash
-cd EchoSense
-```
-
----
-
-## Step 4
-
-Create a virtual environment.
-
-```bash
-python -m venv venv
-```
-
-Activate it.
-
-Windows
-
-```bash
-venv\Scripts\activate
-```
-
-Linux/macOS
-
-```bash
-source venv/bin/activate
-```
-
----
-
-## Step 5
-
-Install dependencies.
-
-```bash
-pip install -r requirements.txt
-```
-
----
-
-## Step 6
-
-Install FFmpeg.
-
-Verify:
-
-```bash
-ffmpeg -version
-```
-
----
-
-## Step 7
-
-Run the application.
-
-```bash
-python app.py
-```
-
-Visit
-
-```
-http://127.0.0.1:5000
-```
-
----
-
-# 📸 Screenshots
-
-Add screenshots here.
-
-Example:
-
-```
-screenshots/
-│
-├── home.png
-├── recording.png
-├── upload.png
-└── prediction.png
-```
 
 ---
 
